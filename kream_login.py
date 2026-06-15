@@ -44,56 +44,58 @@ def start_driver(headless=False):
 def find_css(driver, selector):
     return driver.find_element(By.CSS_SELECTOR, selector)
 
+
 def wait_class(driver, selector, timeout=10):
     return WebDriverWait(driver, timeout).until(
         EC.element_to_be_clickable((By.CLASS_NAME, selector))
     )
+
 
 def wait_css(driver, selector, timeout=10):
     return WebDriverWait(driver, timeout).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, selector))
     )
 
+
 driver = None
 
 try:
     driver = start_driver()
-    
+
     ### 1. 홈페이지 진입 ###
-    
+
     driver.get('https://kream.co.kr')
-    wait_class(driver,'top_link')
-    
+    wait_class(driver, 'top_link')
 
     ### 2. 로그인 페이지 진입 ###
 
-    find_css(driver,LOGIN_LINK_SELECTOR).click()
-    wait_class(driver,'input_item')
-    
+    find_css(driver, LOGIN_LINK_SELECTOR).click()
+    wait_class(driver, 'input_item')
+
     ### 3. 일반 로그인 진행 ###
 
-    email_id = find_css(driver,EMAIL_INPUT_SELECTOR)
-    email_id.send_keys('') # 테스트 id 입력 env파일로 빼서 넣기!
+    email_id = find_css(driver, EMAIL_INPUT_SELECTOR)
+    email_id.send_keys('')  # 테스트 id 입력 env파일로 빼서 넣기!
 
-    pw = find_css(driver,PASSWORD_INPUT_SELECTOR)
-    pw.send_keys('') # 테스트 pw 입력 env파일로 빼서 넣기!
+    pw = find_css(driver, PASSWORD_INPUT_SELECTOR)
+    pw.send_keys('')  # 테스트 pw 입력 env파일로 빼서 넣기!
 
-    loginbtn = find_css(driver,LOGIN_BUTTON_SELECTOR)
+    loginbtn = find_css(driver, LOGIN_BUTTON_SELECTOR)
     loginbtn.click()
 
     time.sleep(1)
 
     ### 로그인 완료 ###
-    wait_css(driver,'#wrap > div.header-wrapper > div > div > div > div > div > div > div.header_top > div > ul > li:nth-child(5) > a')
+    wait_css(driver, '#wrap > div.header-wrapper > div > div > div > div > div > div > div.header_top > div > ul > li:nth-child(5) > a')
 
-    logoutbtn = find_css(driver,'#wrap > div.header-wrapper > div > div > div > div > div > div > div.header_top > div > ul > li:nth-child(5) > a').text
+    logoutbtn = find_css(driver, '#wrap > div.header-wrapper > div > div > div > div > div > div > div.header_top > div > ul > li:nth-child(5) > a').text
 
     if logoutbtn == '로그아웃':
         pass
     else:
         raise Exception("로그인 후 로그아웃 버튼이 표시되지 않았습니다.")
 
-    
+
 except:
     print(traceback.format_exc())
 
